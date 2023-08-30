@@ -1,24 +1,24 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a vanilla Rails app that demonstrates `ViewComponent` breaking `rails stats`.
 
-Things you may want to cover:
+Steps to reproduce this error:
 
-* Ruby version
+1. `rails new error-demo`
+2. `cd error-demo`
+3. `bundle add view_component`
+4. `rails stats`
 
-* System dependencies
+This yields the result:
 
-* Configuration
+```
+rails aborted!
+TypeError: no implicit conversion of nil into String
 
-* Database creation
+Tasks: TOP => stats
+(See full trace by running task with --trace)
+```
 
-* Database initialization
+After some digging, I found the issue stems from [this line](https://github.com/ViewComponent/view_component/blob/main/lib/view_component/rails/tasks/view_component.rake#L10).
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+At this point, `ViewComponent::Base.view_component_path` resolves to `nil`.
